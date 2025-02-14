@@ -76,11 +76,11 @@
 </div>
     
        <!-- Button trigger modal -->
-
+       @if ($tasks->isEmpty())
   
+       <p class="text-center" >Belum ada task. Silakan buat task baru.</p>
 
-
-
+       @else
         <table class="table table-bordered table-striped text-center" id="tableCatatan" >
             <thead class="table-dark">
                 <tr>
@@ -108,7 +108,16 @@
                         @method('DELETE')
                         <button class="btn btn-danger me-3" type="submit" > <i data-feather="trash-2" ></i></button>
                        </form>
-                       <button class="btn btn-warning  " type="button"  data-bs-toggle="modal" data-bs-target="#edit" >  <i data-feather="edit"></i> </button>
+                       <button type="button" class="btn btn-warning btn-edit-task"
+                       data-id="{{ $task->id }}"
+                       data-name="{{ $task->name }}"
+                       data-date="{{ $task->date }}"
+                       data-time="{{ $task->time }}"
+                       data-description="{{ $task->description }}"
+                       data-bs-toggle="modal" data-bs-target="#edit">
+                       <i data-feather="edit"></i> 
+                   </button>
+                       
                     </td>
                     @empty
                       <td colspan="6" class="text-center" ><b>Catatan Kosong</b></td>
@@ -116,48 +125,49 @@
                   </tr>
             </tbody>
         </table>
-     
+        @endif
 
 
     </div>
   {{-- Modal edit --}}
-  <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Catatan Baru</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Catatan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" id="form-edit">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="task-id">
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Nama Kegiatan:</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ $task->name }}"  required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="date" class="col-form-label">Tanggal:</label>
+                        <input type="date" class="form-control" id="date" name="date" value="{{ $task->date }}"  required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="time" class="col-form-label">Waktu:</label>
+                        <input type="time" class="form-control" id="time" name="time" value="{{ $task->time }}"  required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Keterangan:</label>
+                        <textarea class="form-control" id="description" name="description" required>{{ $task->description }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btnSubmit">Update</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <form action="{{ route('task.update',$task->id) }}" method="POST" id="form-edit"  >
-            @csrf
-            @method('PUT')
-            <div class="mb-3">
-              <label for="name" class="col-form-label">Nama Kegiatan:</label>
-              <input type="text" class="form-control" id="name" name="name" value="{{ $task->name }}" required>
-            </div>
-            <div class="mb-3">
-              <label for="date" class="col-form-label">Tanggal:</label>
-                <input type="date" class="form-control" id="date" name="date" value="{{ $task->date }}" required>
-            </div>
-            <div class="mb-3">
-              <label for="time" class="col-form-label">Waktu:</label>
-                <input type="time" class="form-control" id="time" name="time" value="{{ $task->time }}" required>
-            </div>
-            <div class="mb-3">
-              <label for="description" class="col-form-label">Keterangan:</label>
-              <textarea class="form-control" id="description" name="description"  id="description"  required> {{ $task->description }} </textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btnSubmit">Update</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-       
-        </div>
-      </div>
     </div>
-  </div>
+</div>
+
     
        {{-- Modal kegiatan Baru --}}
        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >

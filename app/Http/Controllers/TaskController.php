@@ -21,6 +21,7 @@ class TaskController extends Controller
     {
         $user = Auth::user();
 
+        // Ambil daftar task user (bisa kosong)
         $tasks = $user->tasks()
             ->when($request->filled('search'), function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request->search . '%');
@@ -29,7 +30,8 @@ class TaskController extends Controller
                 $query->whereDate('date', Carbon::parse($request->date)->startOfDay());
             })
             ->get();
-
+    
+        // Tampilkan halaman task.index dengan daftar task
         return view('task', compact('tasks'));
     }
 
@@ -51,6 +53,9 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
+
+
+
         Task::create([
             'name'        => $request->name,
             'date'        => $request->date,
@@ -82,7 +87,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        
     }
 
     /**
@@ -97,7 +102,7 @@ class TaskController extends Controller
         $task->update($request->validated());
 
         return redirect()
-            ->route('task.index')
+            ->route('task.index',compact('task'))
             ->with('success', 'Task updated successfully.');
     }
 

@@ -24,9 +24,6 @@ Route::get('/register', [UserController::class, 'registration'])->name('register
 Route::post('/register', [UserController::class, 'prosesRegistration'])->name('register.proses');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-
 Route::middleware(['auth'])->group(function () {
-    Route::resource('task', TaskController::class)->except(['show', 'create']);
+    Route::resource('task', TaskController::class)->except(['show', 'create', 'edit']);
 });
-
-
